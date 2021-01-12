@@ -1,0 +1,29 @@
+  pre.code{
+    background: #333;
+  }
+  pre.code code{
+    font-family: ui-monospace;
+    background: transparent;
+    border: none;
+    color: #eee;
+    width: max-content;
+  }
+  p{
+    position: relative;
+  }
+  p.back_to_pagetop{
+    margin-bottom: 0;    
+  }
+  p.back_to_pagetop::after{
+    content: "";
+    clear: both;
+    display: block;
+  }
+  p.back_to_pagetop a{
+    float: right;
+  }
+
+  img.img_thumb
+  {
+	  width: 620px;
+  }

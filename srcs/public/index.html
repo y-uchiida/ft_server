@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>ft_server - /index.html</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="https:////fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="./css/normalize.css">
+  <link rel="stylesheet" href="./css/skeleton.css">
+  <link rel="stylesheet" href="./css/ft_server.css">
+
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row">
+      <div style="margin-top: 10%">
+        <h2 id="page_top">ft_server - /index.html</h2>
+
+        <h3 id="index_overview">Overview</h3>
+        <p>これは、42の課題 ft_server でウチイダが作成したdokcerコンテナです</p>
+        <p>Nginxサーバ上で、WordPressとphpMyAdiminを動作させるDockerfileを作成しました</p>
+        <p>動作確認は、Ubuntu(42 VM)のFirefoxで行っています</p>
+
+        <h3 id="index_contents">Page contents</h3>
+        <ul>
+          <li><a href="#index_usage">Usage</a>
+            <ul>
+              <li><a href="#index_docker_image_build">Build Docker image</a></li>
+              <li><a href="#index_docker_container_create">Create Docker container</a></li>
+              <li><a href="#index_cleanup">Cleanup container & image</a></li>
+              <li><a href="#index_open_pages">Open pages</a></li>
+              <li><a href="#index_other">Other</a></li>
+            </ul>
+          </li>
+          <li><a href="#index_ssl_certificate">SSL Certificate</a></li>
+          <li><a href="#index_review">Review</a>
+            <ul>
+              <li><a href="#index_review_01">01.Make sure the container is following the requirement</a></li>
+              <li><a href="#index_review_02">02.Redirection</a></li>
+              <li><a href="#index_review_03">03.WordPress is enable</a></li>
+              <li><a href="#index_review_04">04.phpMyAdmin is enable</a></li>
+              <li><a href="#index_review_05">05.Switching Nginx autoindex</a></li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3 id="index_usage">Usage</h3>
+        <p>課題の内容に加えて、docker コンテナを簡単に操作するためのMakefileを作成しました</p>
+        <p>以下に利用方法を記載します</p>
+
+        <h4 id="index_docker_image_build">Build Docker image</h4>
+        <p>"make build"で Docker イメージを作成します。イメージ名は他との重複を避けるため、「ft_server_y-uchiida」になります。</p>
+        <p>Docker イメージを再作成する場合は、"make rebuild" を実行してください。</p>
+<pre class="code"><code>
+$ make build
+build image ft_server_y-uchiida ...
+docker build -t ft_server_y-uchiida ./
+Sending build context to Docker daemon  124.4kB
+Step 1/13 : FROM debian:buster
+...(以下略)...
+Successfully built 81f8ceacd11f
+Successfully tagged ft_server_y-uchiida:latest
+
+</code></pre>
+<p class="back_to_pagetop"><a href="#page_top" class="back_to_pagetop">Back to pagetop</a></p>
+
+        <h4 id="index_docker_container_create">Create Docker container</h4>
+        <p>"make run"で Docker コンテナを作成し、起動します。</p>
+        <p>ft_serverの課題のコンテナが、「ft_server_yuchiida」という名称で作成されます。</p>
+<pre class="code"><code>
+$ make run
+docker image exist.
+create new container...
+5b12859d67348a6b2e2bdbb67d84e4b7efa74e3bb2967533c5aa15553bf0d002
+
+$ docker ps
+CONTAINER ID   IMAGE                 COMMAND                  CREATED          STATUS          PORTS                                        NAMES
+5b12859d6734   ft_server_y-uchiida   "/bin/bash start.sh …"   30 seconds ago   Up 27 seconds   0.0.0.0:443->443/tcp, 0.0.0.0:8080->80/tcp   ft_server_y-uchiida
+
+</code></pre>
+<p class="back_to_pagetop"><a href="#page_top" class="back_to_pagetop">Back to pagetop</a></p>
+
+        <h4 id="index_cleanup">Cleanup container & image</h4>
+        <p>"make clean"で Docker コンテナとイメージを削除します。</p>
+        <p>レビュー終了後の後始末にご利用ください。</p>
+<pre class="code"><code>
+$ make clean
+stop container ft_server_y-uchiida...
+ft_server_y-uchiida
+remove container ft_server_y-uchiida...
+ft_server_y-uchiida
+remove docker image ft_server_y-uchiida...
+Untagged: ft_server_y-uchiida:latest
+Deleted: sha256:81f8ceacd11f5c798c5e535d6d38eb1aff6afbfb3a63788064bded1e09a0938c
+Deleted: sha256:f16e23036b0933388ac428d3c78990714b678338d57ded69350799089a88a521
+Deleted: sha256:9b00788f33b15c8791a7df308c1607c2ba0150ac6b2b649a90db3d9c5c3d4561
+...(以下略)...
+
+</code></pre>
+<p class="back_to_pagetop"><a href="#page_top" class="back_to_pagetop">Back to pagetop</a></p>
+
+        <h4 id="index_open_pages">Open pages</h4>
+        <p>"make open"で localhostサーバーのトップページ(このページ)をfirefoxで開きます。</p>
+        <p>localhostが通信できない( == docker コンテナが動作していない)ときは、メッセージを表示します。</p>
+        <p>"make wordpress"と"make phpmyadmin"で、それぞれ wordpressとphpMyAdminのページを開きます。</p>
+        <p></p>
+<pre class="code"><code>
+$ make open
+open https://localhost/
+
+$ make open
+localhost is not working. check container status. // <- コンテナが起動していない場合
+
+$ make wordpress
+open https://localhost/wordpress/
+
+</code></pre>
+<p class="back_to_pagetop"><a href="#page_top" class="back_to_pagetop">Back to pagetop</a></p>
+
+        <h4 id="index_other">Other</h4>
+        <p>"make open"で localhostサーバーのトップページ(このページ)をfirefoxで開きます。</p>
+        <p>localhostが通信できない( == docker コンテナが動作していない)ときは、メッセージを表示します。</p>
+        <p>"make wordpress"と"make phpmyadmin"で、それぞれ WordPressとphpMyAdminのページを開きます。</p>
+        <p></p>
+<pre class="code"><code>
+$ make help
+below targets you can use as sub-commands...
+- build
+-- build docker image as "ft_server_y-uchiida".
+
+- rebuild
+-- build docker image after removing current image.
+
+- rm_image
+-- remove image "ft_server_y-uchiida".
+
+- run [NGINX_AUTOINDEX=off]
+-- create container "ft_server_y-uchiida".
+-- if a stopped container exist, restart it.
+-- if a option "NGINX_AUTOINDEX=off" was set, nginx config change autoindex disable.
+
+- stop
+-- stop a runnning container "ft_server_y-uchiida".
+
+- exec
+-- connect /bin/bash to container "ft_server_y-uchiida".
+-- if a container not exist or stopped, it will create or restart before connecting.
+
+- autoindex-on
+-- re-create container with nginx autoindex config engable.
+-- this command force container remove.
+
+- autoindex-off
+-- container re-make with nginx autoindex config disable.
+-- this command force container remove.
+
+- open_local
+-- open top page file on firefox with file:// protcol (as local file).
+
+- open
+-- open top page of localhost on firefox.
+-- if not localhost(container) runnning, show massage.
+
+- wordpress
+-- open wordpress on firefox.
+-- if not localhost(container) runnning, show massage.
+
+- phpmyadmin
+-- open phpmyadmin on firefox.
+-- if not localhost(container) runnning, show massage.
+
+- clean
+-- remove dokcer container and docker image "ft_server_y-uchiida".
+
+</code></pre>
+<p class="back_to_pagetop"><a href="#page_top" class="back_to_pagetop">Back to pagetop</a></p>
+
+        <h3 id="index_ssl_certificate">SSL Certificate</h3>
+        <p>この課題では、https通信の実装が含まれています</p>
+        <p>しかし、ローカルの仮想環境では、適切なSSL証明書を作成することができません</p>
+        <p>そのため、通信の暗号化を行うためだけのSSL証明書を自分で作成する必要があります</p>
+        <p>きちんとした認証局を通さずに発行されたこのような証明書は「自己証明書」と呼ばれ、一般的なブラウザからアクセスした際に警告が表示されます</p>
+        <p>Linux VMのFirefoxでアクセスする際も、警告を無視してページを表示する必要があります</p>
+        <p>警告画面が表示されたら、画面右下の「Advanced」 > 「Accept the Risk and Continue」のボタンをクリックして、localhostにアクセスしてください。</p>
+        <a href="./img/01_connectiong_ssl.png" target="_blank"><img class="img_thumb" src="./img/01_connectiong_ssl.png"><br />クリックで拡大表示</a>
+
+
+        <h3 id="index_review">Review</h3>
+        <p>レビューの際に確認してほしい項目を以下に記載します</p>
+        <p>もちろん、このほかの動作についても気になる部分があれば動作させてください</p>
+        
+        <h4 id="index_review_01">01.Make sure the container is following the requirement</h4>
+        <ul>
+          <li>debian:busterをベースにした単一コンテナ上に実装されている
+            <ul>
+              <li>コンテナを起動後、" docker ps " で確認できます</li>
+              <li>" make exec "でコンテナ内に入ったあと、 " service --status-all " で複数のサービス(nginx, php-fpm, mysql)が動作していることを確認できます</li>
+            </ul>
+          </li>
+        </ul>
+<pre class="code"><code>
+$ docker ps
+CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                                        NAMES
+399e3c14cfeb        ft_server_y-uchiida   "/bin/bash start.sh …"   3 minutes ago       Up 3 minutes        0.0.0.0:443->443/tcp, 0.0.0.0:8080->80/tcp   ft_server_y-uchiida
+
+$make exec
+docker image exist.
+docker container ft_server_y-uchiida is running.
+
+root@399e3c14cfeb:/tmp# service --status-all
+ [ ? ]  hwclock.sh
+ [ + ]  mysql
+ [ + ]  nginx
+ [ + ]  php7.3-fpm
+ [ - ]  procps
+ [ - ]  rsync
+
+</code></pre>
+        <p class="back_to_pagetop"><a href="#page_top" class="back_to_pagetop">Back to pagetop</a></p>
+
+        <h4 id="index_review_02">02.Redirection</h4>
+        <ul>
+          <li> httpのアクセスをhttpsに転送している
+          <ul>
+            <li>
+              <a href="http://localhost:8080/" target="_blank">http://localhost:8080/</a> にアクセスしても、
+              <a href="https://localhost/" target="_blank">https://localhost/</a>が表示されます
+            </li>
+          </ul>
+        </li>
+        <li> 特定のURLへのアクセスを、別のサイトへ転送している
+          <ul>
+            <li>
+              <a href="https://localhost/jump_to_42intra/" target="_blank">https://localhost/jump_to_42intra/</a> にアクセスすると、
+              別サイトである<a href="https://intra.42.fr/" target="_blank">https://intra.42.fr/</a>へ移動します
+            </li>
+          </ul>
+        </li>
+        </ul>
+        <p class="back_to_pagetop"><a href="#page_top" class="back_to_pagetop">Back to pagetop</a></p>
+
+        <h4 id="index_review_03">03.WordPress is enable</h4>
+        <ul>
+          <li>WordPressのサイトおよび管理画面が利用できる
+            <ul>
+              <li>" make wordpress "で <a href="https://localhost/wordpress/" target="_blank">WordPress サイト</a>にアクセスします</li>
+              <li>必要項目を入力して、WordPressの初期設定ができることを確認します</li>
+              <li>※メールが送信されてしまうので、メールアドレスは「test@sample.com」をお勧めします</li>
+              <li>入力したIDとパスワードで、WordPressの管理画面にログインできることを確認します</li>
+            </ul>
+          </li>
+        </ul>
+        <p class="back_to_pagetop"><a href="#page_top" class="back_to_pagetop">Back to pagetop</a></p>
+
+        <h4 id="index_review_04">04.phpMyAdmin is enable</h4>
+        <ul>
+          <li>phpMyAdminが利用できる
+            <ul>
+              <li>" make phpmyadmin "で <a href="https://localhost/phpmyadmin/" target="_blank">phpMyAdmin</a>にアクセスします</li>
+              <li>ユーザー名とパスワードを入力して、phpMyAdminにログインできることを確認します</li>
+              <li>ユーザー名は「root」、パスワードはなしです</li>
+              <li>phpMyAdminの画面から、WordPress用のデータベース(wp_ftserber)などが存在していることを確認します</li>
+            </ul>
+          </li>
+        </ul>
+        <p class="back_to_pagetop"><a href="#page_top" class="back_to_pagetop">Back to pagetop</a></p>
+
+        <h4 id="index_review_05">05.Switching Nginx autoindex</h4>
+        <ul>
+          <li>Autoindexが有効になっていることを確認する
+            <ul>
+              <li>autoindexの確認用に用意したディレクトリ<a href="https://localhost/check_autoindex/" target="_blank">https://localhost/check_autoindex/</a>にアクセスします</li>
+              <li>ディレクトリ内のファイルが一覧表示されることを確認します</li>
+            </ul>
+          </li>
+          <li>Autoindexの有効・無効を切り替える
+            <ul>
+              <li>" make autoindex-on "と " make autoindex-off "で、 コンテナの再作成を行います</li>
+              <li><a href="https://localhost/check_autoindex/" target="_blank">https://localhost/check_autoindex/</a>にアクセスし、ページの動作が変わることを確認します</li>
+            </ul>
+          </li>
+        </ul>
+        <p class="back_to_pagetop"><a href="#page_top" class="back_to_pagetop">Back to pagetop</a></p>
+
+      </div>
+    </div>
+  </div>
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>
