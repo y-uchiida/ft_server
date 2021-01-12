@@ -189,5 +189,5 @@ help:
 	@echo
 
 	@echo - clean
-	@echo --  remove dokcer container and docker image \"$(NAME)\".
+	@echo --  remove docker container and docker image \"$(NAME)\".
 	@echo
